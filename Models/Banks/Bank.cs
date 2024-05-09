@@ -1,8 +1,9 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace mercantil_api.Models.Banks
 {
+    [Index(nameof(Code), IsUnique = true)]
     public class Bank
     {
         [MaxLength(11)]

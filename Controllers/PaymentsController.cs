@@ -88,6 +88,8 @@ namespace mercantil_api.Controllers
         [HttpPost]
         public async Task<ActionResult<Payment>> PostPayment(PaymentDTO payment)
         {
+            string errorMessage = string.Empty;
+
             if (_context.Payments == null)
             {
                 return Problem("Entity set 'PaymentContext.Payments'  is null.");
@@ -105,8 +107,13 @@ namespace mercantil_api.Controllers
                 return CreatedAtAction(nameof(PostPayment), new {Id = paymentId}, payment);
             } catch (DbUpdateConcurrencyException ex)
             {
-                return StatusCode(500, new { ex.Message });
+                errorMessage = ex.Message;
+            } catch (Exception ex)
+            {
+                errorMessage = ex.Message;
             }
+
+            return StatusCode(500, new { Message = errorMessage });
         }
 
         // DELETE: api/Payments/5

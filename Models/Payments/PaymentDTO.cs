@@ -1,5 +1,4 @@
-﻿using mercantil_api.Models.Banks;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace mercantil_api.Models.Payments
 {
@@ -11,7 +10,7 @@ namespace mercantil_api.Models.Payments
         public decimal Amount { get; set; }
 
         [Required]
-        public int BankId { get; set; } = new();
+        public string? BankCode { get; set; }
 
         [Required]
         [MaxLength(11)]

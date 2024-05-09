@@ -1,5 +1,6 @@
 ﻿using mercantil_api.Models.Banks;
 using mercantil_api.Models.Payments;
+using mercantil_api.Services.Mercantil;
 using Microsoft.EntityFrameworkCore;
 
 namespace mercantil_api.Services.Payments
@@ -7,9 +8,12 @@ namespace mercantil_api.Services.Payments
     public class PaymentsService
     {
         private readonly PaymentContext _paymentContext;
-        public PaymentsService(PaymentContext paymentContext)
+        private readonly MercantilService _mercantilService;
+
+        public PaymentsService(PaymentContext paymentContext, MercantilService mercantilService)
         {
             _paymentContext = paymentContext;
+            _mercantilService = mercantilService;
         }
 
         public async Task<int> Create(PaymentDTO newPayment)
@@ -17,26 +21,29 @@ namespace mercantil_api.Services.Payments
             var bank = _paymentContext
                 .Banks
                 .AsNoTracking()
-                .FirstOrDefault(bank => bank.Id == newPayment.BankId);
+                .FirstOrDefault(bank => bank.Code == newPayment.BankCode);
 
             if (bank == null)
             {
                 throw new Exception("Selected bank is invalid");
             }
 
-            var payment = new Payment()
-            {
-                Amount = newPayment.Amount,
-                Bank = bank,
-                DestinationPhone = newPayment.DestinationPhone,
-                Dni = newPayment.Dni,
-                PaymentReference = newPayment.PaymentReference.PadLeft(11, '0'),
-                InvoiceNumber = newPayment.InvoiceNumber.PadLeft(11, '0')
-            };
+            _mercantilService.Pay(newPayment);
 
-            _paymentContext.Add(payment);
+            //var payment = new Payment()
+            //{
+            //    Amount = newPayment.Amount,
+            //    Bank = bank,
+            //    DestinationPhone = newPayment.DestinationPhone,
+            //    Dni = newPayment.Dni,
+            //    PaymentReference = newPayment.PaymentReference.PadLeft(11, '0'),
+            //    InvoiceNumber = newPayment.InvoiceNumber.PadLeft(11, '0')
+            //};
 
-            return await _paymentContext.SaveChangesAsync();
+            //_paymentContext.Add(payment);
+
+            //return await _paymentContext.SaveChangesAsync();
+            return 1;
         }
     }
 }
