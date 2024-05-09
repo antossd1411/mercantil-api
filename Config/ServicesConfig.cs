@@ -1,4 +1,5 @@
 ﻿using mercantil_api.Services.Banks;
+using mercantil_api.Services.Mercantil;
 using mercantil_api.Services.Payments;
 
 namespace mercantil_api.Config
@@ -9,6 +10,7 @@ namespace mercantil_api.Config
         {
             builder.Services.AddTransient<PaymentsService>();
             builder.Services.AddTransient<BanksService>();
+            builder.Services.AddTransient<MercantilService>();
         }
     }
 }
